@@ -10,7 +10,6 @@ alkaline_earth_metals=dict(alkaline_earth_metals)
 
 noble_gases=dict([("helium",2), ("neon",10), ("argon",18), ("krypton",36), ("xenon",54), ("radon",86)])
 
-
 tmp = alkaline_earth_metals.copy()
 tmp.update(noble_gases)
 print("Dizionari Mergiati: "+ str(tmp) +"\n")
