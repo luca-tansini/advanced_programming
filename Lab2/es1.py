@@ -64,6 +64,6 @@ def findFibWithLen(l):
 def findFibWithLenLog(l):
     i=0;
     while(True):
-        if(log(fib(i),10)>=l):
+        if(log(fib(i),10)>=l-1):
             return fib(i),i
         i+=1
