@@ -13,21 +13,36 @@ class Stack:
     def push(self,x):
         self.stack = [x]+self.stack
 
-operators = {'+':lambda x,y: x+y,'-':lambda x,y: x-y,'*':lambda x,y: x*y,'/':lambda x,y: x/y}
 
-def isoperator(x):
-    operators = ["+","-","*","/"]
-    if (x in operators): return True
-    else : return False
+class PolishCalculator:
 
-def eval(string):
-    l = string.split()
-    stack = Stack([])
-    for t in l:
-        if isoperator(t):
-            b = float(stack.pop())
-            a = float(stack.pop())
-            stack.push(operators[t](a,b))
-        else:
-            stack.push(t)
-    return stack.pop()
+    def __init__(self):
+        self.operators = {'+':lambda x,y: x+y,'-':lambda x,y: x-y,'*':lambda x,y: x*y,'/':lambda x,y: x/y,'**':lambda x,y: x**y,'//': lambda x,y: x//y}
+
+    def isoperator(self,x):
+        if (x in self.operators): return True
+        else : return False
+
+    def eval(self,string):
+        l = string.split()
+        stack = Stack([])
+        for t in l:
+            if self.isoperator(t):
+                b = float(stack.pop())
+                a = float(stack.pop())
+                stack.push(self.operators[t](a,b))
+            else:
+                stack.push(t)
+        return stack.pop()
+
+    def str(self,string):
+        l = string.split()
+        stack = Stack([])
+        for t in l:
+            if self.isoperator(t):
+                b = stack.pop()
+                a = stack.pop()
+                stack.push("("+a+t+b+")")
+            else:
+                stack.push(t)
+        return stack.pop()
