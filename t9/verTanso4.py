@@ -22,7 +22,7 @@ class t9translator:
         self.dict = builddict(dictfile)
 
     def translateword(self,t9word):
-        return [e for e in self.dict.get(t9word,[])]
+        return self.dict.get(t9word,[])
 
     def rectranslatetext(self,words,index):
         if(index == len(words)-1):
