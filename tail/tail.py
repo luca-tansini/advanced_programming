@@ -1,46 +1,43 @@
-import sys
+import sys,datetime
 
 class TailRecursionException(Exception):
     def __init__(self,*args):
         self.args=args
 
 #DECORATORE PER LA TAIL RECURSION
-def tail_recursive(func):
+def tailrecursive(func):
     def wrapped(*args):
         frame = sys._getframe()
         if(frame.f_back.f_back and frame.f_code == frame.f_back.f_back.f_code):
             #intercettata chiamata ricorsiva...
             raise TailRecursionException(*args)
-        return func(*args)
+        while True:
+            try:
+                return func(*args)
+            except TailRecursionException as e:
+                args=e.args
     return wrapped
 
-#FUNZIONE TRAMPOLINO PER CHIAMARE LE FUZIONI DECORATE
-def tail(func,*args):
-    while True:
-        try:
-            return func(*args)
-        except TailRecursionException as e:
-            args=e.args
 
 def fact(out,n):
     if(n<3):
         return out
     return fact(out*(n-1),n-1)
 
-@tail_recursive
-def trfact(out,n):
+@tailrecursive
+def tfact(out,n):
     if(n<3):
         return out
-    return trfact(out*(n-1),n-1)
+    return tfact(out*(n-1),n-1)
 
 def fib(i,a,b):
     if(i==0): return a
     return fib(i-1,b,a+b)
 
-@tail_recursive
-def trfib(i,a,b):
+@tailrecursive
+def tfib(i,a,b):
     if(i==0): return a
-    return trfib(i-1,b,a+b)
+    return tfib(i-1,b,a+b)
 
 if __name__ == '__main__':
     print("fib(5000,1,1):")
@@ -48,13 +45,30 @@ if __name__ == '__main__':
         fib(5000,1,1)
     except Exception as e:
         print(e)
-    print("\ntail(trfib,5000,1,1):")
-    print(tail(trfib,5000,1,1))
+    print("\ntfib(5000,1,1):")
+    print(tfib(5000,1,1))
 
     print("\nfact(5000,5000):")
     try:
         fact(5000,5000)
     except Exception as e:
         print(e)
-    print("\ntail(trfact,5000,5000):")
-    print(str(tail(trfact,5000,5000))[:1000]+"...")
+    print("\ntfact(5000,5000):")
+    print(str(tfact(5000,5000))[:1000]+"...")
+
+    print("\n\nTimes:")
+    
+    sys.setrecursionlimit(20000)
+    startfib=datetime.datetime.now()
+    fib(10000,1,1)
+    endfib=datetime.datetime.now()
+    tfib(10000,1,1)
+    endtfib=datetime.datetime.now()
+    print("Tempi fib e tfib:",endfib-startfib,endtfib-endfib)
+
+    startfact=datetime.datetime.now()
+    fact(10000,10000)
+    endfact=datetime.datetime.now()
+    tfact(10000,10000)
+    endtfact=datetime.datetime.now()
+    print("Tempi fact e tfact:",endfact-startfact,endtfact-endfact)
