@@ -1,1 +1,1 @@
-Repo for the Advanced Programming university course exercises
+Repo for the Advanced Programming university course Python exercises
