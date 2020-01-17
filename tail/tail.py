@@ -1,4 +1,4 @@
-import sys,datetime
+import sys,datetime,inspect
 
 class TailRecursionException(Exception):
     def __init__(self,*args):
@@ -10,9 +10,12 @@ def tailrecursive(func):
         frame = sys._getframe()
         if(frame.f_back.f_back and frame.f_code == frame.f_back.f_back.f_code):
             #intercettata chiamata ricorsiva...
+            # print("Intercepted")
             raise TailRecursionException(*args)
+        # print("Allowed")
         while True:
             try:
+                # print("Call")
                 return func(*args)
             except TailRecursionException as e:
                 args=e.args
@@ -20,15 +23,15 @@ def tailrecursive(func):
 
 
 def fact(out,n):
-    if(n<3):
+    if(n<2):
         return out
-    return fact(out*(n-1),n-1)
+    return fact(out*(n),n-1)
 
 @tailrecursive
 def tfact(out,n):
-    if(n<3):
+    if(n<2):
         return out
-    return tfact(out*(n-1),n-1)
+    return tfact(out*(n),n-1)
 
 def fib(i,a,b):
     if(i==0): return a
@@ -36,6 +39,7 @@ def fib(i,a,b):
 
 @tailrecursive
 def tfib(i,a,b):
+
     if(i==0): return a
     return tfib(i-1,b,a+b)
 
@@ -50,14 +54,14 @@ if __name__ == '__main__':
 
     print("\nfact(5000,5000):")
     try:
-        fact(5000,5000)
+        fact(1,5000)
     except Exception as e:
         print(e)
-    print("\ntfact(5000,5000):")
-    print(str(tfact(5000,5000))[:1000]+"...")
+    print("\ntfact(1,5000):")
+    print(str(tfact(1,5000))[:1000]+"...")
 
     print("\n\nTimes:")
-    
+
     sys.setrecursionlimit(20000)
     startfib=datetime.datetime.now()
     fib(10000,1,1)
@@ -67,8 +71,8 @@ if __name__ == '__main__':
     print("Tempi fib e tfib:",endfib-startfib,endtfib-endfib)
 
     startfact=datetime.datetime.now()
-    fact(10000,10000)
+    fact(1,10000)
     endfact=datetime.datetime.now()
-    tfact(10000,10000)
+    tfact(1,10000)
     endtfact=datetime.datetime.now()
     print("Tempi fact e tfact:",endfact-startfact,endtfact-endfact)
